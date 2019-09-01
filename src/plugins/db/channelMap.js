@@ -81,11 +81,14 @@ const getChannelIdByName = function (name) {
 
   return ret;
 };
-
+const getChannels = function () {
+  return [...map.values()];
+};
 
 export {
   getChannelById,
   getChannelIdByName,
   getChannelIdByReamIds,
   getChannelReamIdsById,
+  getChannels,
 };
