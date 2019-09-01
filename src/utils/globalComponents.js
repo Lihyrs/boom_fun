@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import {
-  Image, Lazyload, ImagePreview, Row, Col,
+  Image, Lazyload, ImagePreview, Row, Col, Tab, Tabs,
 } from 'vant';
 
 import Comment from '../components/Comment.vue';
@@ -12,6 +12,7 @@ Vue.use(Image);
 Vue.use(Lazyload);
 Vue.use(ImagePreview);
 Vue.use(Row).use(Col);
+Vue.use(Tab).use(Tabs);
 
 /* end of vant ui */
 
