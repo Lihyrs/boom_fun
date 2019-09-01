@@ -1,7 +1,7 @@
 <template>
   <van-row type="flex" justify="space-between">
     <van-col>{{comment.userName}}</van-col>
-    <van-col>{{'#' + comment.floor}}</van-col>
+    <van-col v-if="showFloor">{{'#' + comment.floor}}</van-col>
   </van-row>
 </template>
 
@@ -11,6 +11,10 @@ export default {
     comment: {
       type: Object,
       required: true,
+    },
+    showFloor: {
+      type: Boolean,
+      default: true,
     },
   },
 };

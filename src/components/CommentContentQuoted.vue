@@ -1,7 +1,5 @@
 <script>
 import { EMOT_IN_COMMENT, TEXT_IN_COMMENT, IMG_IN_COMMENT } from '../types';
-import CommentHeader from './CommentHeader.vue';
-import CommentFooter from './CommentFooter.vue';
 import CommentImage from './CommentImage.vue';
 
 export default {
@@ -10,29 +8,27 @@ export default {
       type: Object,
       required: true,
     },
-    avatar: {
-      type: Object,
-      required: true,
-    },
-    showFloor: {
-      type: Boolean,
-      default: true,
-    },
   },
   components: {
-    CommentHeader,
-    CommentFooter,
     CommentImage,
   },
-  /* eslint-disable no-unused-vars */
+  computed: {
+    quoteUserInfo() {
+      return {};
+    },
+  },
   render(h) {
+    const quoteUser = this.quoteUserInfo.username
+      ? this.quoteUserInfo.username
+      : '';
     return (
-      <van-row gutter="5">
-        <van-col span="4">
-          <Avatar data={this.avatar} />
-        </van-col>
+      <van-row>
         <van-col>
-          <CommentHeader comment={this.comment} showFloor={this.showFloor} />
+          <div class="row">
+            <span class="uname">{this.comment.userName}</span>
+            {quoteUser && '回复 '}
+            <span class="uname">{quoteUser && quoteUser}</span>:
+          </div>
           {this.comment.content.map((obj) => {
             let ret = '';
             if (obj.type === TEXT_IN_COMMENT) {
@@ -45,10 +41,20 @@ export default {
             }
             return ret;
           })}
-          <CommentFooter comment={this.comment} />
         </van-col>
       </van-row>
     );
   },
 };
 </script>
+
+<style lang="less" scoped>
+.row {
+  display: inline-block;
+  margin-right: 5px;
+  .uname {
+    color: #1989fa;
+    cursor: pointer;
+  }
+}
+</style>

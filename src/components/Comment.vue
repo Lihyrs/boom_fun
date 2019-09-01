@@ -1,7 +1,13 @@
 
+<template>
+  <CommentNormal v-if="!commentParsed.quoteId" :comment="commentParsed" :avatar="avatar" />
+  <CommentContentQuoted v-else :comment="commentParsed" />
+</template>
+
 <script>
-import { ImagePreview } from 'vant';
 import { EMOT_IN_COMMENT, TEXT_IN_COMMENT, IMG_IN_COMMENT } from '../types';
+import CommentNormal from './CommentNormal.vue';
+import CommentContentQuoted from './CommentContentQuoted.vue';
 
 export default {
   props: {
@@ -9,10 +15,10 @@ export default {
       type: Object,
       required: true,
     },
-    quoted: {
-      type: Boolean,
-      default: false,
-    },
+  },
+  components: {
+    CommentNormal,
+    CommentContentQuoted,
   },
 
   methods: {
@@ -32,28 +38,26 @@ export default {
       let ret = '';
       if (src) {
         ret = src[0].split(',');
-        ret = `//cdnfile.aixifan.com/static/umeditor/emotion/images/${ret[0]}/${
-          ret[ret.length - 1]
-        }.gif`;
+        ret = {
+          url: `//cdnfile.aixifan.com/static/umeditor/emotion/images/${
+            ret[0]
+          }/${ret[ret.length - 1]}.gif`,
+        };
       }
       return ret;
     },
     getImgSrc(str) {
       const imgRegExp = /(?<=\[img=图片\])https*:\/\/[^\s]*?[(.jpg)|(.png)|(.gif)](?=\[\/img\])/;
       const src = str.match(imgRegExp);
-      let ret = '';
+      let ret = {};
       if (src) {
-        ret = src[0];
+        ret.url = src[0];
+      }
+
+      if (this.comment.quoteId) {
+        ret.shortCode = '[图片]';
       }
       return ret;
-    },
-    showImg(evt) {
-      ImagePreview({
-        images: [evt.target.src],
-        showIndex: false,
-        lazyLoad: true,
-        closeOnPopstate: true,
-      });
     },
   },
 
@@ -97,7 +101,7 @@ export default {
 
         const emotSrc = this.getEmotSrc(code[0]);
         const imgSrc = this.getImgSrc(code[0]);
-        if (emotSrc || imgSrc) {
+        if (emotSrc || imgSrc.url || imgSrc.shortCode) {
           ret.push({
             payload: emotSrc || imgSrc,
             type: emotSrc ? EMOT_IN_COMMENT : IMG_IN_COMMENT,
@@ -109,31 +113,31 @@ export default {
     },
   },
 
-  render(h) {
-    console.log(this.commentParsed);
-    return (
-      <van-row gutter="5">
-        <van-col span="4">
-          <Avatar data={this.avatar} />
-        </van-col>
-        <van-col>
-          {this.commentParsed.content.map((obj) => {
-            let ret = '';
-            if (obj.type === TEXT_IN_COMMENT) {
-              ret = <span>{obj.payload}</span>;
-            } else if (
-              obj.type === EMOT_IN_COMMENT
-              || obj.type === IMG_IN_COMMENT
-            ) {
-              ret = (
-                <van-image lazy-load src={obj.payload} onClick={this.showImg} />
-              );
-            }
-            return ret;
-          })}
-        </van-col>
-      </van-row>
-    );
-  },
+  //   render(h) {
+  //     // console.log(this.commentParsed);
+  //     return (
+  //       <van-row gutter="5">
+  //         <van-col span="4">
+  //           <Avatar data={this.avatar} />
+  //         </van-col>
+  //         <van-col>
+  //           {this.commentParsed.content.map((obj) => {
+  //             let ret = '';
+  //             if (obj.type === TEXT_IN_COMMENT) {
+  //               ret = <span>{obj.payload}</span>;
+  //             } else if (
+  //               obj.type === EMOT_IN_COMMENT
+  //               || obj.type === IMG_IN_COMMENT
+  //             ) {
+  //               ret = (
+  //                 <van-image lazy-load src={obj.payload} onClick={this.showImg} />
+  //               );
+  //             }
+  //             return ret;
+  //           })}
+  //         </van-col>
+  //       </van-row>
+  //     );
+  //   },
 };
 </script>
