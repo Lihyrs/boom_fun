@@ -1,8 +1,5 @@
 <template>
-  <van-row gutter="10">
-    <van-col>{{comment.postDate}}</van-col>
-    <van-col>{{comment.deviceModel}}</van-col>
-  </van-row>
+  <van-cell class="footer" :title="comment.postDate" :border="false"></van-cell>
 </template>
 
 <script>
@@ -15,3 +12,9 @@ export default {
   },
 };
 </script>
+<style lang="less" scoped>
+.footer {
+  padding-left: 0;
+  padding-right: 0;
+}
+</style>

@@ -1,8 +1,5 @@
 <template>
-  <van-row type="flex" justify="space-between">
-    <van-col>{{comment.userName}}</van-col>
-    <van-col v-if="showFloor">{{'#' + comment.floor}}</van-col>
-  </van-row>
+  <van-cell :title="comment.userName" :value="floor" :border="false"></van-cell>
 </template>
 
 <script>
@@ -15,6 +12,14 @@ export default {
     showFloor: {
       type: Boolean,
       default: true,
+    },
+  },
+  computed: {
+    floor() {
+      if (this.showFloor) {
+        return `#${this.comment.floor}`;
+      }
+      return '';
     },
   },
 };
