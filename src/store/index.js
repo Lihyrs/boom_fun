@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+// import db from '../plugins/db';
 
 Vue.use(Vuex);
 
@@ -7,7 +8,7 @@ export default new Vuex.Store({
   state: {
     activeId: '',
     articlesSet: new Map(),
-    curArticles: {},
+    commentData: {},
   },
   mutations: {
     articles: (state, payload) => {
@@ -22,8 +23,12 @@ export default new Vuex.Store({
       state.activeId = activeId;
     },
     curArticles: (state, payload) => {
-      const { activeId } = payload;
-      state.curArticles = state.articlesSet.get(activeId);
+      const { data } = payload;
+      state.articlesSet.set(state.activeId, data);
+    },
+    commentData: (state, payload) => {
+      const { comment } = payload;
+      state.commentData = comment;
     },
   },
   actions: {
@@ -40,11 +45,15 @@ export default new Vuex.Store({
       dispatch('updateActiveId', payload);
       dispatch('updateCurArticles', payload);
     },
+    updateCommentData: ({ commit }, payload) => {
+      commit('commentData', payload);
+    },
   },
   getters: {
     getArticlesByChannelId: state => id => state.articlesSet.get(id),
     getActiveId: state => state.activeId,
-    getCurArticles: state => state.curArticles,
+    getCurArticles: state => state.articlesSet.get(state.activeId),
     getArticlesSet: state => state.articlesSet,
+    getCurComments: state => state.commentData,
   },
 });
