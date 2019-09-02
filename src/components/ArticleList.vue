@@ -1,7 +1,7 @@
 <template>
   <van-pull-refresh v-model="refreshing" @refresh="refresh">
     <van-list
-      :value="loading"
+      v-model="loadMoring"
       :loading-text="loadMoringText"
       :finished-text="loadAllText"
       :finished="finished"
@@ -31,13 +31,14 @@ export default {
   mixins: [RemoteData({ url: 'afdf' })],
   data() {
     return {
-      loading: false,
+      loadMoring: false,
       refreshing: false,
       loadMoreError: false,
       type: '',
       pageNo: 1,
     };
   },
+
   methods: {
     refresh() {
       this.pageNo = 1;
