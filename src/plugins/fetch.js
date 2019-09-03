@@ -6,7 +6,7 @@ const $fetch = async function (url, options = {}) {
   const result = await axios(url, {
     ...options,
   });
-  if (result.code === 200) {
+  if (result.status === 200) {
     return result.data;
   }
 
