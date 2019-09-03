@@ -8,6 +8,10 @@ const db = {
   ...ream,
 };
 
+export {
+  db,
+};
+
 export default {
   install(Vue, options) {
     Vue.prototype.$db = db;
