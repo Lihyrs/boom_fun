@@ -1,14 +1,26 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-// import db from '../plugins/db';
+import { db } from '../plugins/db';
 
 Vue.use(Vuex);
+
+let reamIds = (function () {
+  let channels = db.getChannels();
+  let ret = new Map();
+  for (let item of channels) {
+    ret.set(item.id, item.reamIds);
+  }
+
+  return ret;
+}());
+
 
 export default new Vuex.Store({
   state: {
     activeId: '',
     articlesSet: new Map(),
     commentData: {},
+    channelReamIdsMap: reamIds,
   },
   mutations: {
     articles: (state, payload) => {
@@ -30,6 +42,9 @@ export default new Vuex.Store({
       const { comment } = payload;
       state.commentData = comment;
     },
+    doFilteChannelReamIds: (state, payload) => {
+      state.channelReamIdsMap.set(state.activeId, payload.reamIds);
+    },
   },
   actions: {
     updateArticles: ({ commit }, payload) => {
@@ -43,10 +58,13 @@ export default new Vuex.Store({
     },
     changeActive: ({ dispatch }, payload) => {
       dispatch('updateActiveId', payload);
-      dispatch('updateCurArticles', payload);
     },
     updateCommentData: ({ commit }, payload) => {
       commit('commentData', payload);
+    },
+
+    filteChannelReamIds: ({ commit }, payload) => {
+      commit('doFilteChannelReamIds', payload);
     },
   },
   getters: {
@@ -55,5 +73,8 @@ export default new Vuex.Store({
     getCurArticles: state => state.articlesSet.get(state.activeId),
     getArticlesSet: state => state.articlesSet,
     getCurComments: state => state.commentData,
+    getCurChannelReamIds: state => state.channelReamIdsMap.get(state.activeId),
+    getChannelReamIdsByChannelId: state => id => state.channelReamIdsMap.get(id),
   },
+
 });
