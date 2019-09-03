@@ -1,5 +1,7 @@
 <script>
-import { EMOT_IN_COMMENT, TEXT_IN_COMMENT, IMG_IN_COMMENT } from '../types';
+import {
+  EMOT_IN_COMMENT, TEXT_IN_COMMENT, IMG_IN_COMMENT, HTML_TAG_IN_COMMENT,
+} from '../types';
 import CommentImage from './CommentImage.vue';
 
 export default {
@@ -8,29 +10,31 @@ export default {
       type: Object,
       required: true,
     },
+    quoteUser: {
+      type: Object,
+      required: true,
+      default: null,
+    },
   },
   components: {
     CommentImage,
   },
-  computed: {
-    quoteUserInfo() {
-      return { username: 'abc' };
-    },
-  },
   render(h) {
-    const quoteUser = this.quoteUserInfo.username
-      ? this.quoteUserInfo.username
-      : '';
-
+    const quoteUser = this.quoteUser && this.quoteUser.userName ? this.quoteUser : null;
     return (
-      <van-cell class="inr-cell comment">
+      <van-cell class='comment qtd-comment'>
+        <div class="i-hole" slot="icon">
+
+        </div>
         <template slot="title">
           <span class="uname">{this.comment.userName}</span>
-          {quoteUser && '回复 '}
-          <span class="uname">{quoteUser && quoteUser}</span>:
+          <span>{quoteUser ? '' : ':'}</span>
         </template>
-        <van-cell class="content" slot="label">
+        <van-cell class="content" slot="label" border={false}>
           <template slot="title">
+            {quoteUser ? '回复' : ''}
+            <span class="uname">{quoteUser && quoteUser.userName}</span>
+            <span>{quoteUser ? ':' : ''}</span>
             {this.comment.content.map((obj) => {
               let ret = '';
               if (obj.type === TEXT_IN_COMMENT) {
@@ -40,6 +44,11 @@ export default {
                 || obj.type === IMG_IN_COMMENT
               ) {
                 ret = <CommentImage data={obj.payload} type={obj.type} />;
+              } else if (obj.type === HTML_TAG_IN_COMMENT) {
+                console.log(obj);
+                if (obj.payload.tag === 'newline') {
+                  ret = <br/>;
+                }
               }
               return ret;
             })}
@@ -52,17 +61,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.comment {
-  .uname {
-    color: #1989fa;
-    cursor: pointer;
-    &:first-of-type {
-      margin-right: 5px;
-    }
-  }
+@import '../assets/styles/comm.less';
+@import '../assets/styles/mixins.less';
 
-  // .content {
-  //   padding-left: 0;
-  // }
+.comment {
+ .uname{
+   .uname
+ }
 }
+.qtd-comment{
+   background: #ffe;
+    border: 1px solid #e5e5e5;
+    border-radius: 2px;
+    padding: 4px 3px 0;
+    .content{
+       background: #ffe;
+    }
+};
 </style>

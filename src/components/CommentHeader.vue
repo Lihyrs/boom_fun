@@ -1,5 +1,5 @@
 <template>
-  <van-cell :title="comment.userName" :value="floor" :border="false"></van-cell>
+  <van-cell title-class="uname" :title="comment.userName" :value="floor" :border="false"></van-cell>
 </template>
 
 <script>

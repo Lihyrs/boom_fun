@@ -1,5 +1,7 @@
 <script>
-import { EMOT_IN_COMMENT, TEXT_IN_COMMENT, IMG_IN_COMMENT } from '../types';
+import {
+  EMOT_IN_COMMENT, TEXT_IN_COMMENT, IMG_IN_COMMENT, HTML_TAG_IN_COMMENT,
+} from '../types';
 import CommentHeader from './CommentHeader.vue';
 import CommentFooter from './CommentFooter.vue';
 import CommentImage from './CommentImage.vue';
@@ -49,6 +51,10 @@ export default {
                   || obj.type === IMG_IN_COMMENT
                 ) {
                   ret = <CommentImage data={obj.payload} type={obj.type} />;
+                } else if (obj.type === HTML_TAG_IN_COMMENT) {
+                  if (obj.payload.tag === 'newline') {
+                    return '\n';
+                  }
                 }
                 return ret;
               })}

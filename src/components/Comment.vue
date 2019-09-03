@@ -1,11 +1,13 @@
 
 <template>
-  <CommentNormal v-if="!commentParsed.quoteId" :comment="commentParsed" :avatar="avatar" />
-  <CommentContentQuoted v-else :comment="commentParsed" />
+  <CommentContentQuoted v-if="isQuoted" :comment="commentParsed" :quoteUser="quoteUser" />
+  <CommentNormal v-else :comment="commentParsed" :avatar="avatar" />
 </template>
 
 <script>
-import { EMOT_IN_COMMENT, TEXT_IN_COMMENT, IMG_IN_COMMENT } from '../types';
+import {
+  EMOT_IN_COMMENT, TEXT_IN_COMMENT, IMG_IN_COMMENT, HTML_TAG_IN_COMMENT,
+} from '../types';
 import CommentNormal from './CommentNormal.vue';
 import CommentContentQuoted from './CommentContentQuoted.vue';
 
@@ -15,6 +17,14 @@ export default {
       type: Object,
       required: true,
     },
+    isQuoted: {
+      type: Boolean,
+      default: false,
+    },
+    quoteUser: {
+      type: [Object, null],
+      default: null,
+    },
   },
   components: {
     CommentNormal,
@@ -22,18 +32,27 @@ export default {
   },
 
   methods: {
+    getHtmlTags() {
+      const htmlRegExp = /↵*&lt;br\/?&gt;/g;
+      let comment = this.comment.content;
+      comment = comment.replace(htmlRegExp, '&lt;br/&gt;');
+      // console.log(
+      //   'html----', [...comment.matchAll(htmlRegExp)],
+      // );
+      return [...comment.matchAll(htmlRegExp)];
+    },
     getEmots() {
-      const emotRegExp = /\[emot=[^s]*?\/\]/g;
+      const emotRegExp = /\[emot=.*?\/\]/gi;
       const comment = this.comment.content;
       return [...comment.matchAll(emotRegExp)];
     },
     getImgs() {
-      const imgRegExp = /\[img=图片\]https*:\/\/[^\s]*?[(.jpg)|(.png)|(.gif)]\[\/img\]/;
+      const imgRegExp = /\[img=图片\]https*:\/\/.*?[(.jpg)|(.png)|(.gif)]\[\/img\]/i;
       const comment = this.comment.content;
       return [...comment.matchAll(imgRegExp)];
     },
     getEmotSrc(str) {
-      const emotRegExp = /(?<=\[emot=)[^s]*?(?=\/\])/;
+      const emotRegExp = /(?<=\[emot=).*?(?=\/\])/;
       const src = str.match(emotRegExp);
       let ret = '';
       if (src) {
@@ -47,7 +66,7 @@ export default {
       return ret;
     },
     getImgSrc(str) {
-      const imgRegExp = /(?<=\[img=图片\])https*:\/\/[^\s]*?[(.jpg)|(.png)|(.gif)](?=\[\/img\])/;
+      const imgRegExp = /(?<=\[img=图片\])https*:\/\/.*?[(.jpg)|(.png)|(.gif)](?=\[\/img\])/i;
       const src = str.match(imgRegExp);
       let ret = {};
       if (src) {
@@ -56,6 +75,16 @@ export default {
 
       if (this.comment.quoteId) {
         ret.shortCode = '[图片]';
+      }
+      return ret;
+    },
+    getHtmlTag(str) {
+      const regExp = /(?<=&lt;)br\/?(?=&gt;)/i;
+      const tag = str.match(regExp);
+      // console.log('object', tag);
+      let ret = {};
+      if (tag) {
+        ret.tag = 'newline';
       }
       return ret;
     },
@@ -72,15 +101,27 @@ export default {
       };
     },
     commentParsed() {
-      let shortCodes = [...this.getEmots(), ...this.getImgs()];
+      let shortCodes = [...this.getEmots(), ...this.getImgs(), ...this.getHtmlTags()];
       // 按索引排序
       shortCodes.sort((a, b) => a.index - b.index);
+
 
       let ret = [];
       let preIdx = 0;
       const comment = this.comment.content;
       const length = comment.length;
-      //   console.log(shortCodes);
+      if (shortCodes.length === 0) {
+        return {
+          ...this.comment,
+          content: [
+            {
+              payload: comment,
+              type: TEXT_IN_COMMENT,
+            },
+          ],
+        };
+      }
+
       for (let code of shortCodes) {
         // 已经是最后一个??
         if (preIdx > length) {
@@ -88,7 +129,7 @@ export default {
         }
 
         let substr = comment.substring(preIdx, code.index);
-        // console.log(preIdx, code.index, '===>', substr);
+
         // 下一个起点
         preIdx = code.index + code[0].length;
 
@@ -101,12 +142,16 @@ export default {
 
         const emotSrc = this.getEmotSrc(code[0]);
         const imgSrc = this.getImgSrc(code[0]);
-        if (emotSrc || imgSrc.url || imgSrc.shortCode) {
-          ret.push({
-            payload: emotSrc || imgSrc,
-            type: emotSrc ? EMOT_IN_COMMENT : IMG_IN_COMMENT,
-          });
+        const tag = this.getHtmlTag(code[0]);
+        let tmp = {};
+        if (emotSrc || tag.tag) {
+          tmp.type = emotSrc ? EMOT_IN_COMMENT : HTML_TAG_IN_COMMENT;
+          tmp.payload = emotSrc || tag;
+        } else if (imgSrc.url || imgSrc.shortCode) {
+          tmp.type = IMG_IN_COMMENT;
+          tmp.payload = imgSrc;
         }
+        ret.push({ ...tmp });
       }
 
       return { ...this.comment, content: ret };
