@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import '@vant/touch-emulator';
-import App from './components/AppLayout.vue';
+import App from './components/App.vue';
 import router from './router';
 import store from './store';
 import './utils/globalComponents';
