@@ -4,7 +4,7 @@
       <!-- 头像 -->
       <van-image radius="50%" class="avatar" lazy-load :src="data.headUrl" />
       <!-- 挂件 -->
-      <van-image class="bzt" lazy-load :src="data.avatarImage" />
+      <van-image v-if="data.avatarImage" class="bzt" lazy-load :src="data.avatarImage" />
     </a>
   </div>
 </template>
