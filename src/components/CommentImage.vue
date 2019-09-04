@@ -1,7 +1,20 @@
 <template>
   <div class="row" @click="showImg">
     <span class="s-code" v-if="showShortCode">{{data.shortCode}}</span>
-    <van-image v-else lazy-load :src="data.url" />
+    <van-image
+      v-else-if="isEmot"
+      class="ct-emot"
+      contain
+      lazy-load
+      :src="data.url"
+    />
+    <van-image
+      v-else
+      class="ct-img"
+      contain
+      lazy-load
+      :src="data.url"
+    />
   </div>
 </template>
 
@@ -19,7 +32,6 @@ export default {
       required: true,
     },
   },
-
   methods: {
     showImg() {
       if (this.type === EMOT_IN_COMMENT) {
@@ -37,6 +49,12 @@ export default {
     showShortCode() {
       return this.type === IMG_IN_COMMENT && this.data.shortCode;
     },
+    isEmot() {
+      return this.type === EMOT_IN_COMMENT;
+    },
+    isImg() {
+      return this.type === IMG_IN_COMMENT;
+    },
   },
 };
 </script>
@@ -48,6 +66,15 @@ export default {
     cursor: pointer;
     //color: #07c160;
   }
+}
+
+.ct-emot{
+  max-width: 60px;
+  max-height: 60px
+}
+
+.ct-img{
+  max-width: 200px
 }
 
 .row {

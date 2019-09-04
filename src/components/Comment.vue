@@ -1,15 +1,7 @@
-
-<template>
-  <CommentContentQuoted v-if="isQuoted" :comment="commentParsed" :quoteUser="quoteUser" />
-  <CommentNormal v-else :comment="commentParsed" :avatar="avatar" />
-</template>
-
 <script>
-import {
-  EMOT_IN_COMMENT, TEXT_IN_COMMENT, IMG_IN_COMMENT, HTML_TAG_IN_COMMENT,
-} from '../types';
-import CommentNormal from './CommentNormal.vue';
-import CommentContentQuoted from './CommentContentQuoted.vue';
+import { COMMENT_TYPE, SYS_PLATFORM_TYPE } from '../types';
+
+import CommentLayout from './CommentLayout.vue';
 
 export default {
   props: {
@@ -17,172 +9,103 @@ export default {
       type: Object,
       required: true,
     },
-    isQuoted: {
-      type: Boolean,
-      default: false,
+    type: {
+      type: String,
+      default: COMMENT_TYPE.MAIN,
     },
     quoteUser: {
-      type: [Object, null],
+      type: Object,
       default: null,
+    },
+    quoteComments: {
+      type: Array,
     },
   },
   components: {
-    CommentNormal,
-    CommentContentQuoted,
-  },
-
-  methods: {
-    getHtmlTags() {
-      const htmlRegExp = /↵*&lt;br\/?&gt;/g;
-      let comment = this.comment.content;
-      comment = comment.replace(htmlRegExp, '&lt;br/&gt;');
-      // console.log(
-      //   'html----', [...comment.matchAll(htmlRegExp)],
-      // );
-      return [...comment.matchAll(htmlRegExp)];
-    },
-    getEmots() {
-      const emotRegExp = /\[emot=.*?\/\]/gi;
-      const comment = this.comment.content;
-      return [...comment.matchAll(emotRegExp)];
-    },
-    getImgs() {
-      const imgRegExp = /\[img=图片\]https*:\/\/.*?[(.jpg)|(.png)|(.gif)]\[\/img\]/i;
-      const comment = this.comment.content;
-      return [...comment.matchAll(imgRegExp)];
-    },
-    getEmotSrc(str) {
-      const emotRegExp = /(?<=\[emot=).*?(?=\/\])/;
-      const src = str.match(emotRegExp);
-      let ret = '';
-      if (src) {
-        ret = src[0].split(',');
-        ret = {
-          url: `//cdnfile.aixifan.com/static/umeditor/emotion/images/${
-            ret[0]
-          }/${ret[ret.length - 1]}.gif`,
-        };
-      }
-      return ret;
-    },
-    getImgSrc(str) {
-      const imgRegExp = /(?<=\[img=图片\])https*:\/\/.*?[(.jpg)|(.png)|(.gif)](?=\[\/img\])/i;
-      const src = str.match(imgRegExp);
-      let ret = {};
-      if (src) {
-        ret.url = src[0];
-      }
-
-      if (this.comment.quoteId) {
-        ret.shortCode = '[图片]';
-      }
-      return ret;
-    },
-    getHtmlTag(str) {
-      const regExp = /(?<=&lt;)br\/?(?=&gt;)/i;
-      const tag = str.match(regExp);
-      // console.log('object', tag);
-      let ret = {};
-      if (tag) {
-        ret.tag = 'newline';
-      }
-      return ret;
-    },
+    CommentLayout,
   },
 
   computed: {
-    avatar() {
-      const comment = this.comment;
-      return {
-        headUrl: comment.headUrl[0].url,
-        avatarImage: comment.avatarImage,
-        username: comment.userName,
-        userId: comment.userId,
-      };
+    commentLayout() {
+      let ret = {};
+      const width = 24;
+      const type = this.$store.getters.getPlatformType;
+      const { PC, MOBILE } = SYS_PLATFORM_TYPE;
+      if (type === PC) {
+        ret.offset = 4;
+        ret.span = width - (ret.offset * 2);
+      } else if (type === MOBILE) {
+        ret.offset = 1;
+        ret.span = width - (ret.offset * 2);
+      }
+
+      return ret;
     },
-    commentParsed() {
-      let shortCodes = [...this.getEmots(), ...this.getImgs(), ...this.getHtmlTags()];
-      // 按索引排序
-      shortCodes.sort((a, b) => a.index - b.index);
-
-
+    getClass() {
       let ret = [];
-      let preIdx = 0;
-      const comment = this.comment.content;
-      const length = comment.length;
-      if (shortCodes.length === 0) {
-        return {
-          ...this.comment,
-          content: [
-            {
-              payload: comment,
-              type: TEXT_IN_COMMENT,
-            },
-          ],
-        };
+      const { PC, MOBILE } = SYS_PLATFORM_TYPE;
+      const type = this.$store.getters.getPlatformType;
+      if (type === PC) {
+        // nothing to do
+      } else if (type === MOBILE) {
+        ret.push('mobile');
       }
 
-      for (let code of shortCodes) {
-        // 已经是最后一个??
-        if (preIdx > length) {
-          break;
-        }
-
-        let substr = comment.substring(preIdx, code.index);
-
-        // 下一个起点
-        preIdx = code.index + code[0].length;
-
-        if (substr) {
-          ret.push({
-            payload: substr,
-            type: TEXT_IN_COMMENT,
-          });
-        }
-
-        const emotSrc = this.getEmotSrc(code[0]);
-        const imgSrc = this.getImgSrc(code[0]);
-        const tag = this.getHtmlTag(code[0]);
-        let tmp = {};
-        if (emotSrc || tag.tag) {
-          tmp.type = emotSrc ? EMOT_IN_COMMENT : HTML_TAG_IN_COMMENT;
-          tmp.payload = emotSrc || tag;
-        } else if (imgSrc.url || imgSrc.shortCode) {
-          tmp.type = IMG_IN_COMMENT;
-          tmp.payload = imgSrc;
-        }
-        ret.push({ ...tmp });
-      }
-
-      return { ...this.comment, content: ret };
+      return ret.join(' ');
     },
   },
 
-  //   render(h) {
-  //     // console.log(this.commentParsed);
-  //     return (
-  //       <van-row gutter="5">
-  //         <van-col span="4">
-  //           <Avatar data={this.avatar} />
-  //         </van-col>
-  //         <van-col>
-  //           {this.commentParsed.content.map((obj) => {
-  //             let ret = '';
-  //             if (obj.type === TEXT_IN_COMMENT) {
-  //               ret = <span>{obj.payload}</span>;
-  //             } else if (
-  //               obj.type === EMOT_IN_COMMENT
-  //               || obj.type === IMG_IN_COMMENT
-  //             ) {
-  //               ret = (
-  //                 <van-image lazy-load src={obj.payload} onClick={this.showImg} />
-  //               );
-  //             }
-  //             return ret;
-  //           })}
-  //         </van-col>
-  //       </van-row>
-  //     );
-  //   },
+  render(h) {
+    let qComments = this.quoteComments;
+    const hasQuoteComment = !!qComments.length;
+    let quoteCommentCount = 0;
+    const { span, offset } = this.commentLayout;
+
+    const renderQuoteComment = function (arr) {
+      const data = arr[0];
+      if (!data) {
+        return null;
+      }
+
+      quoteCommentCount++;
+
+      return (
+        <CommentLayout
+          comment={arr[0].payload}
+          type={COMMENT_TYPE.QUOTE}
+          quoteUser={arr[0].quoteUser}
+          hasQuoteComment={arr.length > 1}
+          isFirstQuoteComment={quoteCommentCount === 1}
+        >
+          {renderQuoteComment(arr.slice(1))}
+        </CommentLayout>
+      );
+    };
+
+    return (
+      <van-row class={`comment-list ${this.getClass}`}>
+        <van-col span={span} offset={offset}>
+          <CommentLayout
+            comment={this.comment}
+            type={COMMENT_TYPE.MAIN}
+            hasQuoteComment={hasQuoteComment}
+          >
+            {renderQuoteComment(qComments)}
+          </CommentLayout>
+        </van-col>
+      </van-row>
+    );
+  },
 };
 </script>
+
+<style lang="less" scoped>
+.comment-list {
+  margin-bottom: 20px;
+}
+
+.main-comment-item {
+  border-bottom: 1px solid #e6e6e6;
+  padding: 20px 0 5px;
+}
+</style>

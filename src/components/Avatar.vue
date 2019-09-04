@@ -2,9 +2,16 @@
   <div>
     <a class="fc-avatar">
       <!-- 头像 -->
-      <van-image radius="50%" class="avatar" lazy-load :src="data.headUrl" />
+      <van-image radius="50%" class="avatar"  lazy-load :src="data.headUrl" />
       <!-- 挂件 -->
-      <van-image v-if="data.avatarImage" class="bzt" lazy-load :src="data.avatarImage" />
+      <div class="bzt-wrap">
+        <van-image
+          v-if="data.avatarImage"
+          class="bzt"
+          lazy-load
+          :src="data.avatarImage"
+        />
+      </div>
     </a>
   </div>
 </template>
@@ -23,14 +30,17 @@ export default {
 <style lang="less" scoped>
 .fc-avatar {
   position: relative;
-  width: 80px;
-  height: 70px;
+  width: 56px;
+  height: 49px;
   display: inline-block;
+  margin-top:-15px;
 
   .avatar {
     position: absolute;
     top: 50%;
     left: 50%;
+    width:35px;
+    height:35px;
     transform: translate(-50%, -50%);
   }
 

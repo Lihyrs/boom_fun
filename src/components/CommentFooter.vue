@@ -1,5 +1,5 @@
 <template>
-  <van-cell class="footer" :title="comment.postDate" :border="false"></van-cell>
+  <van-row v-if="comment.postDate"><van-col>发表于 {{comment.postDate}}</van-col></van-row>
 </template>
 
 <script>
@@ -12,9 +12,3 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped>
-.footer {
-  padding-left: 0;
-  padding-right: 0;
-}
-</style>

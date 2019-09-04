@@ -1,5 +1,16 @@
 <template>
-  <van-cell title-class="uname" :title="comment.userName" :value="floor" :border="false"></van-cell>
+  <!-- begin of comment header -->
+  <van-row class="comment-header" v-if="visibily">
+    <!-- username -->
+    <van-col span="12">
+      <span class="uname">{{username}}</span>
+    </van-col>
+    <!-- floor -->
+    <van-col class="floor" span="12"  v-if="showFloor">
+      <span >{{floor}}</span>
+    </van-col>
+  </van-row>
+  <!-- end of comment header -->
 </template>
 
 <script>
@@ -13,6 +24,13 @@ export default {
       type: Boolean,
       default: true,
     },
+    visibily: {
+      type: Boolean,
+      default: true,
+    },
+    cusClass: {
+      type: String,
+    },
   },
   computed: {
     floor() {
@@ -21,6 +39,18 @@ export default {
       }
       return '';
     },
+    username() {
+      return this.comment.userName;
+    },
+    getClass() {
+      return this.cusClass;
+    },
   },
 };
 </script>
+
+<style lang="less" scoped>
+.floor{
+  text-align: end
+}
+</style>
