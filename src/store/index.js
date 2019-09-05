@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { db } from '../plugins/db';
+import { client } from '../plugins/client';
 
 Vue.use(Vuex);
 
@@ -14,6 +15,12 @@ let reamIds = (function () {
   return ret;
 }());
 
+let clientInfo = {
+  browser: client.getBrowser(),
+  engine: client.getEngine(),
+  system: client.getSystem(),
+  type: client.getPlatformType(),
+};
 
 export default new Vuex.Store({
   state: {
@@ -21,6 +28,7 @@ export default new Vuex.Store({
     articlesSet: new Map(),
     commentData: {},
     channelReamIdsMap: reamIds,
+    clientInfo,
   },
   mutations: {
     articles: (state, payload) => {
@@ -75,6 +83,8 @@ export default new Vuex.Store({
     getCurComments: state => state.commentData,
     getCurChannelReamIds: state => state.channelReamIdsMap.get(state.activeId),
     getChannelReamIdsByChannelId: state => id => state.channelReamIdsMap.get(id),
+    getClientInfo: state => state.clientInfo,
+    getPlatformType: state => state.clientInfo.type,
   },
 
 });
