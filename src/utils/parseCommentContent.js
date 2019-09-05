@@ -108,7 +108,7 @@ function parseCommentContent(str, isQuote = false) {
     }
 
     const emotSrc = getEmotSrc(code[0]);
-    const imgSrc = getImgSrc(code[0]);
+    const imgSrc = getImgSrc(code[0], isQuote);
     const tag = getHtmlTag(code[0]);
     let tmp = {};
     if (emotSrc || tag.tag) {
