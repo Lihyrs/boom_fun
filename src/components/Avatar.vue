@@ -33,7 +33,6 @@ export default {
   width: 56px;
   height: 49px;
   display: inline-block;
-  margin-top:-15px;
 
   .avatar {
     position: absolute;

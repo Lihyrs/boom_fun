@@ -1,7 +1,9 @@
 <template>
   <van-tabs v-model="activeId" swipeable>
     <van-tab v-for="item in tags" :title="item.name" :name="item.id" :key="item.id">
-      <ArticleList />
+      <div class="art-list-container">
+        <ArticleList />
+      </div>
     </van-tab>
   </van-tabs>
 </template>

@@ -4,5 +4,8 @@
   </transition>
 </template>
 
-<script>
-</script>
+<style lang="less">
+
+@import '../assets/styles/comm.less';
+@import '../assets/styles/media.less';
+</style>
