@@ -1,17 +1,17 @@
 <template>
-  <router-link :to="{name: 'article', params: { id: data.id }}">
-    <van-cell class="item" :title="data.title" :clickable="true">
+  <router-link class="art-item" :to="{name: 'article', params: { id: data.id }}">
+    <van-cell :title="data.title" :clickable="true">
       <template slot="icon">
-        <div>
+        <div class="act-left">
           <span class="comm-cnt">{{data.comment_count}}</span>
           <span class="comm-tt">评论</span>
         </div>
       </template>
 
       <van-row slot="label">
-        <van-col>
+        <van-col  span="24">
           <van-row class="act-content">
-            <van-col>{{data.description}}</van-col>
+            <van-col >{{data.description}}</van-col>
           </van-row>
           <van-row class="act-info footer">
             <van-col>
@@ -21,7 +21,7 @@
               <span class="act-time">{{postDate}}</span>
             </van-col>
 
-            <van-col>
+            <van-col class="act-view">
               <van-icon class="icon-view" size="14" name="eye-o" />
               <span class="view">{{data.view_count}}</span>
             </van-col>
@@ -51,30 +51,54 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.item {
+.art-item {
   .comm-tt,
   .comm-cnt {
     display: block;
-    text-align: center;
   }
   .comm-cnt {
     margin: 0 0 4px 4px;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 15PX;
     color: #fd4c5b;
     letter-spacing: 0;
-    line-height: 20px;
+    line-height: 1;
   }
-  .com-tt {
+  .comm-tt {
     font-size: 12px;
     color: #999;
     letter-spacing: 0;
     line-height: 12px;
-    margin: 0 auto;
   }
   .footer {
+    margin-top:10px;
     .act-time {
       padding: 0 10px;
+    }
+  }
+
+  .act-content{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    //margin-top: 10px;
+  }
+
+  .act-left{
+    margin-right: 10px;
+        text-align: right;
+        padding-top:5px;
+  }
+  .act-view{
+    position: relative;
+    .view{
+      margin-left: 15PX;
+    }
+    .icon-view{
+      position: absolute;
+      left: 0;
+      top:50%;
+      transform: translateY(-50%)
     }
   }
 }

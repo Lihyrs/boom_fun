@@ -9,6 +9,7 @@
       :error-text="loadMoringErrorText"
       @load="loadMore"
       v-if="getCurArticles"
+      class="art-list"
     >
       <ArticleListItem v-for="item in getCurArticles.articleList" :data="item" :key="item.id" />
     </van-list>
@@ -38,7 +39,14 @@ export default {
       pageNo: 1,
     };
   },
-
+  created() {
+    // test
+    // this.updateActiveId({ activeId: 1 });
+    this.updateCurArticles({
+      activeId: this.getActiveId,
+      data: aritcleListData,
+    });
+  },
   methods: {
     refresh() {
       this.pageNo = 1;
@@ -101,3 +109,26 @@ export default {
   },
 };
 </script>
+
+<style lang="less" scoped>
+.art-list {
+  padding-top:20px;
+  /deep/ .item-wrap {
+    &::before {
+      content: "";
+      display: block;
+      height: 1px;
+      margin: 20px 0;
+      width: 100%;
+      background: #e6e6e6;
+    }
+
+    &:first-of-type {
+
+      &::before {
+        display: none;
+      }
+    }
+  }
+}
+</style>
