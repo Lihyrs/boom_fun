@@ -10,6 +10,7 @@ import ArticleList from '../components/ArticleList.vue';
 import CommentImage from '../components/CommentImage.vue';
 import CommentHeader from '../components/CommentHeader.vue';
 import CommentFooter from '../components/CommentFooter.vue';
+import LoadingView from '../components/Loading.vue';
 // import 'vant/lib/icon/local.css';
 
 
@@ -38,4 +39,5 @@ Vue.component('ArticleList', ArticleList);
 Vue.component('CommentFooter', CommentFooter);
 Vue.component('CommentHeader', CommentHeader);
 Vue.component('CommentImage', CommentImage);
+Vue.component('LoadingView', LoadingView);
 /* end of cunstom component */
