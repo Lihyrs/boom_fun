@@ -2,7 +2,7 @@
   <van-row :class="['comment-item',getClass]">
     <van-col span="24">
       <van-row>
-        <van-col span='24'>
+        <van-col span="24">
           <slot></slot>
         </van-col>
       </van-row>
@@ -21,25 +21,25 @@
             <!-- end of comment header -->
             <!-- begin of comment content -->
             <van-col span="24">
-              <!-- <CommentContentQuoteHeader
-                v-if="isQuote"
-                :quoteUser="quoteUser"
-              :userInfo="{username:commentParsed.userName}"-->
-
               <CommentContent
                 :content="commentParsed.content"
                 :quoteUser="quoteUser"
                 :userInfo="{username:commentParsed.userName}"
                 :isQuote="isQuote"
-              />
+              >
+                <template v-if="isQuote">
+                  <CommentHeader :comment="commentParsed" class="qtd-comm-header">
+                    <span>:</span>
+                  </CommentHeader>
+                </template>
+              </CommentContent>
             </van-col>
           </van-row>
           <!-- end of comment content -->
           <!-- begin of comment footer -->
-          <van-row class="footer">
-            <van-col>
+          <van-row>
+            <van-col span='24'>
               <CommentFooter :comment="commentParsed" />
-              <!-- <span>{{commentParsed.postDate}}</span> -->
             </van-col>
           </van-row>
           <!-- end of comment footer -->
@@ -119,7 +119,7 @@ export default {
 <style lang="less" scoped>
 @import "../assets/styles/mixins.less";
 .comment-item {
-  /deep/ .footer {
+  /deep/ .comm-footer {
     margin-bottom: 15px;
     vertical-align: middle;
   }
@@ -148,11 +148,13 @@ export default {
     color: #2596d2;
   }
 
-  //
-
-  /deep/ .content {
-    margin-top: 16px;
+  /deep/ .comm-content,
+  /deep/ .comm-footer {
     margin-left: 7px;
+  }
+
+  /deep/ .comm-content {
+    margin-top: 16px;
   }
 }
 </style>

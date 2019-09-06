@@ -5,7 +5,7 @@ import {
   IMG_IN_COMMENT,
   HTML_TAG_IN_COMMENT,
 } from '../types';
-import CommentContentLayout from './CommentContentLayout.vue';
+
 
 export default {
   props: {
@@ -22,9 +22,6 @@ export default {
     isQuote: {
       type: Boolean,
     },
-  },
-  components: {
-    CommentContentLayout,
   },
   render(h) {
     const result = this.content.map((obj) => {
@@ -44,10 +41,7 @@ export default {
       return ret;
     });
     return (
-      <CommentContentLayout quoteUser={this.quoteUser}
-        userInfo={this.userInfo} isQuote={this.isQuote}>
-        {result}
-      </CommentContentLayout>
+      <div class='comm-content'>{this.$slots.default}{result}</div>
     );
   },
 };

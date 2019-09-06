@@ -1,15 +1,12 @@
 <template>
   <!-- begin of comment header -->
-  <van-row class="comment-header" v-if="visibily">
+  <div class="comment-header" v-if="visibily">
     <!-- username -->
-    <van-col span="12">
-      <span class="uname">{{username}}</span>
-    </van-col>
-    <!-- floor -->
-    <van-col class="floor" span="12"  v-if="showFloor">
-      <span >{{floor}}</span>
-    </van-col>
-  </van-row>
+    <span class="floor">{{floor}}</span>
+    <span v-if="username" class="uname">{{username}}</span>
+    <!-- for insert : -->
+    <slot v-if="username" />
+  </div>
   <!-- end of comment header -->
 </template>
 
@@ -48,9 +45,3 @@ export default {
   },
 };
 </script>
-
-<style lang="less" scoped>
-.floor{
-  text-align: end
-}
-</style>
