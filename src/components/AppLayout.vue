@@ -1,6 +1,6 @@
 <template>
-  <van-tabs v-model="activeId" swipeable>
-    <van-tab v-for="item in tags" :title="item.name" :name="item.id" :key="item.id">
+  <van-tabs v-model="activeId" swipeable sticky>
+    <van-tab v-for="item in tags" :title="item.name" :name="item.id" :key="item.id" >
       <div class="art-list-container">
         <ArticleList />
       </div>
