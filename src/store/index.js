@@ -25,13 +25,13 @@ let clientInfo = {
 // init articlesSet for Reactivity
 const channelIds = db.getChannels();
 let articlesSet = {};
-channelIds.map((item) => {
+for (let item of channelIds) {
   articlesSet[`cid${item.id}`] = null;
-});
+}
 
-const setArticles = function (channelId, articlesSet, newVal) {
+const setArticles = function (channelId, source, newVal) {
   // eslint-disable-next-line no-param-reassign
-  articlesSet[`cid${channelId}`] = newVal;
+  source[`cid${channelId}`] = newVal;
 };
 const getArticles = function (channelId, articles) {
   return articles[`cid${channelId}`];

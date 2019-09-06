@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /**
  * 用户代理检测是客户端检测的最后的一个选择，
  * 只要可能，都应该优先采用能力检测和怪癖检测
@@ -258,6 +259,7 @@ export { client };
 
 export default {
   install(Vue) {
+    // eslint-disable-next-line no-param-reassign
     Vue.prototype.$client = client;
   },
 };
