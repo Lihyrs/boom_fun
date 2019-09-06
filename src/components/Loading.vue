@@ -13,7 +13,7 @@
     </van-row>
     <van-row class="spinner" v-else-if="loading">
       <van-col>
-        <van-loading size="60" type="spinner" color="#1989fa" />
+        <van-loading size="60" type="spinner" color="#fd4c5d" />
       </van-col>
     </van-row>
   </div>
@@ -27,14 +27,6 @@ export default {
     },
     loading: {
       type: Boolean,
-    },
-  },
-  watch: {
-    error(l, r) {
-      console.log('err', l, r);
-    },
-    loading(l, r) {
-      console.log('loading', l, r);
     },
   },
 };
@@ -62,8 +54,9 @@ export default {
   position: fixed;
   left: 0;
   right: 0;
-  top: 0;
-  bottom: 0;
+  top: 50px;
+  bottom:50px;
+  z-index: 1;
   .load-err,.spinner{
       position: absolute;
       top:50%;

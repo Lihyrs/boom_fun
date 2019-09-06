@@ -1,5 +1,8 @@
 <template>
-  <router-link class="art-item" :to="{name: 'article', params: { id: data.id }}">
+  <router-link
+    class="art-item"
+    :to="{name: 'article', params: { id: data.id,channelId:data.channel_id }}"
+  >
     <van-cell :title="data.title" :clickable="true">
       <template slot="icon">
         <div class="act-left">
@@ -9,9 +12,9 @@
       </template>
 
       <van-row slot="label">
-        <van-col  span="24">
+        <van-col span="24">
           <van-row class="act-content">
-            <van-col >{{data.description}}</van-col>
+            <van-col>{{data.description}}</van-col>
           </van-row>
           <van-row class="act-info footer">
             <van-col>
@@ -59,7 +62,7 @@ export default {
   .comm-cnt {
     margin: 0 0 4px 4px;
     font-weight: bold;
-    font-size: 15PX;
+    font-size: 15px;
     color: #fd4c5b;
     letter-spacing: 0;
     line-height: 1;
@@ -71,34 +74,34 @@ export default {
     line-height: 12px;
   }
   .footer {
-    margin-top:10px;
+    margin-top: 10px;
     .act-time {
       padding: 0 10px;
     }
   }
 
-  .act-content{
+  .act-content {
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space:nowrap;
+    white-space: nowrap;
     //margin-top: 10px;
   }
 
-  .act-left{
+  .act-left {
     margin-right: 10px;
-        text-align: right;
-        padding-top:5px;
+    text-align: right;
+    padding-top: 5px;
   }
-  .act-view{
+  .act-view {
     position: relative;
-    .view{
-      margin-left: 15PX;
+    .view {
+      margin-left: 15px;
     }
-    .icon-view{
+    .icon-view {
       position: absolute;
       left: 0;
-      top:50%;
-      transform: translateY(-50%)
+      top: 50%;
+      transform: translateY(-50%);
     }
   }
 }
