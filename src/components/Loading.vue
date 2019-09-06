@@ -1,5 +1,5 @@
 <template>
-  <div v-if="error || loading" class="loading">
+  <div v-if="error || loading" class="loading"  @click="$emit('reload')"  >
     <van-row v-if="error" class="load-err">
       <van-col span="24">
         <img class="err-img" src="../assets/imgs/q_err_img.png" />
@@ -8,7 +8,7 @@
         <span class="err-txt">加载出了点问题</span>
       </van-col>
       <van-col span="24">
-        <van-button @click="$emit('reload')" plain hairline type="danger">重新加载</van-button>
+        <span class="tip">点击重新加载</span>
       </van-col>
     </van-row>
     <van-row class="spinner" v-else-if="loading">
@@ -44,9 +44,13 @@ export default {
     height: auto;
   }
 
-  .err-txt {
-    font-size: 12px;
+  .err-txt,.tip {
+
     color: #999;
+  }
+
+  .tip{
+       font-size: 18px;
   }
 }
 
