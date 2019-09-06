@@ -41,6 +41,7 @@ export default {
       loadMoreError: false,
       type: '',
       pageNo: 1,
+      totalPage: -1,
     };
   },
   mounted() {
@@ -123,7 +124,7 @@ export default {
   },
   computed: {
     finished() {
-      return false;
+      return this.totalPage !== -1 && this.totalPage === this.pageNo + 1;
     },
     loadMoringText() {
       return 'loading...';
