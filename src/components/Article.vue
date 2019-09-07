@@ -175,6 +175,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.comment-area{
+  margin-top:50px;
+}
 .loading-wrap {
   text-align: center;
 }
