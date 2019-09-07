@@ -15,10 +15,11 @@
           <Comments v-for="comment in comments" :comments="comment" :key="comment.pageNo" />
         </van-list>
       </div>
-      <van-tabbar safe-area-inset-bottom>
+      <van-tabbar safe-area-inset-bottom @change="scroll2Top($event)">
         <van-tabbar-item>
           <a :href="articleLink" :class="articleLink ? 'link' : 'nolink'" target="_blank">文章内容</a>
         </van-tabbar-item>
+        <van-tabbar-item icon="comment-o" :info="commentTopCount" />
       </van-tabbar>
     </template>
     <!-- <van-popup v-model="show"><ArticleContent :html='data.content' /></van-popup> -->
@@ -31,6 +32,7 @@ import moment from 'moment';
 import { mapGetters, mapActions } from 'vuex';
 import RemoteData from '../mixins/RemoteData';
 import Comments from './Comments.vue';
+import { HOST } from '../types';
 // import getArticleInfo from '../utils/getArticleInfo';
 // import ArticleContent from './ArticleContent.vue';
 
@@ -70,6 +72,7 @@ export default {
     this.getComments(this.pageNo);
     // this.getArticle();
   },
+
   methods: {
     back() {
       this.$router.go(-1);
@@ -77,12 +80,14 @@ export default {
     // showArticle() {
     //   this.show = true;
     // },
+
     loadMore() {
       this.type = LOAD_MORE;
       this.getComments(++this.pageNo);
     },
+
     generateUrl(pageNo) {
-      const baseUrl = 'https://www.acfun.cn/rest/pc-direct/comment/listByFloor';
+      const baseUrl = `${HOST}/comment`;
       // for dev
       // const baseUrl = '/comment';
       const url = `${baseUrl}?sourceId=${
@@ -92,6 +97,7 @@ export default {
       )}`;
       return url;
     },
+
     // TODO
     // getArticle() {
     //   const baseUrl = '/article';
@@ -122,26 +128,29 @@ export default {
     // getArticleOnError(e) {
     //   console.log(e);
     // },
+
     getComments(pageNo) {
       this.fetchResource(this.generateUrl(pageNo), {
         name: 'article',
         onSucess: this.getCommentsOnSucess,
         onError: this.getCommentsOnError,
         options: {
-          headers: {
-            // 'Access-Control-Allow-Origin': '*',
-            // 'Content-Type': 'application/json',
-          },
-          mode: 'no-cors',
+          // headers: {
+          //   'Access-Control-Allow-Origin': '*',
+          //   'Content-Type': 'application/json',
+          // },
+          // mode: 'no-cors',
         },
       });
     },
+
     getCommentsOnSucess(data) {
       // 防止请求最后一页显示没有更多了
       this.totalPage = data.totalPage + 1;
       this.comments.push(data);
       this.updateCommentData({ comment: [...this.comments] });
     },
+
     getCommentsOnError(err) {
       if (this.type === LOAD_MORE) {
         this.type = '';
@@ -151,32 +160,52 @@ export default {
       }
       // console.log(err);
     },
+
+    scroll2Top(active) {
+      if (active === 1) {
+        window.scrollTo(0, 0);
+      }
+    },
+
     ...mapActions(['updateCommentData']),
   },
   computed: {
-    ...mapGetters(['getCurComments']),
+    commentTopCount() {
+      if (this.comments.length) {
+        return this.comments[0].totalCount;
+      }
+
+      return 0;
+    },
+
     articleLink() {
       return this.id ? `https://www.acfun.cn/a/ac${this.id}` : '';
     },
+
     loadMoringText() {
       return 'loading...';
     },
+
     loadAllText() {
       return '没有更多了';
     },
+
     loadMoringErrorText() {
       return '请求失败，点击重新加载';
     },
+
     finished() {
       return this.totalPage !== -1 && this.totalPage === this.pageNo + 1;
     },
+
+    ...mapGetters(['getCurComments']),
   },
 };
 </script>
 
 <style lang="less" scoped>
-.comment-area{
-  margin-top:50px;
+.comment-area {
+  margin-top: 50px;
 }
 .loading-wrap {
   text-align: center;
