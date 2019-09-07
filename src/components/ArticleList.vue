@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-pull-refresh v-if="getCurArticles" v-model="refreshing" @refresh="refresh">
+    <van-pull-refresh v-if="articleList" v-model="refreshing" @refresh="refresh">
       <van-list
         v-model="loadMoring"
         :loading-text="loadMoringText"
@@ -11,7 +11,7 @@
         @load="loadMore"
         class="art-list"
       >
-        <ArticleListItem v-for="item in getCurArticles.articleList" :data="item" :key="item.id"/>
+        <ArticleListItem v-for="item in articleList" :data="item" :key="item.id" />
       </van-list>
     </van-pull-refresh>
     <LoadingView v-else :error="hasRemoteErrors" :loading="remoteDataBusy" @reload="reloadOnError" />
@@ -20,14 +20,15 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-// import { aritcleListData } from '../assets/testData';
+import { aritcleListData } from '../assets/testData';
 import ArticleListItem from './ArticleListItem.vue';
 import RemoteData from '../mixins/RemoteData';
+import { HOST } from '../types';
 
 const LOAD_MORE = 'LOAD_MORE';
 const REFRESH = 'REFRESH';
 
-const baseUrl = 'https://webapi.acfun.cn/query/article/list?';
+const baseUrl = `${HOST}/articles`;
 
 export default {
   components: {
@@ -46,6 +47,7 @@ export default {
   },
   mounted() {
     // for dev
+    // console.log(aritcleListData);
     // this.updateCurArticles({
     //   activeId: this.getActiveId,
     //   data: aritcleListData,
@@ -75,31 +77,35 @@ export default {
 
       reamIds = encodeURIComponent(reamIds.join(','));
       const queryStr = `pageNo=${pageNo}&size=10&realmIds=${reamIds}&originalOnly=false&orderType=3&periodType=-1&filterTitleImage=true`;
-      return baseUrl + queryStr;
+      return `${baseUrl}?${queryStr}`;
     },
     getArticles(url) {
       this.fetchResource(url, {
         onSucess: this.getArticlesOnSucess,
         onError: this.getArticlesOnError,
         options: {
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            // 'Content-Type': 'application/json',
-          },
-          mode: 'no-cors',
+          // headers: {
+          //   'Access-Control-Allow-Origin': '*',
+          //   'Content-Type': 'application/json',
+          // },
+          // mode: 'no-cors',
         },
       });
     },
-    getArticlesOnSucess(data) {
-      let ret = {};
+    getArticlesOnSucess(res) {
+      let ret = [];
 
       if (this.type === LOAD_MORE) {
-        ret = this.getCurArticles();
-        ret.articleList.push(data.articleList);
+        let tmp = this.getCurArticles || [];
+        ret.push(res.data);
+        ret = ret.concat(tmp, [res.data]);
       } else if (this.type === REFRESH) {
-        ret = data;
+        ret = [res.data];
       }
+      // 防止请求最后一页显示没有更多了
+      this.totalPage = res.data.totalPage + 1;
       this.updateCurArticles({ activeId: this.getActiveId, data: ret });
+
       this.doFetchEnd();
     },
     getArticlesOnError(err) {
@@ -123,6 +129,17 @@ export default {
     ...mapActions(['updateCurArticles', 'updateActiveId']),
   },
   computed: {
+    articleList() {
+      let ret = [];
+      if (!this.getCurArticles) {
+        return '';
+      }
+      for (let item of (this.getCurArticles)) {
+        ret = ret.concat(item.articleList);
+      }
+
+      return ret;
+    },
     finished() {
       return this.totalPage !== -1 && this.totalPage === this.pageNo + 1;
     },

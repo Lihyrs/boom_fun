@@ -38,7 +38,7 @@
           <!-- end of comment content -->
           <!-- begin of comment footer -->
           <van-row>
-            <van-col span='24'>
+            <van-col span="24">
               <CommentFooter :comment="commentParsed" />
             </van-col>
           </van-row>
@@ -102,12 +102,16 @@ export default {
     },
     avatar() {
       const comment = this.comment;
-      return {
-        headUrl: comment.headUrl[0].url,
-        avatarImage: comment.avatarImage,
-        username: comment.userName,
-        userId: comment.userId,
-      };
+      if (comment.userId) {
+        return {
+          headUrl: comment.headUrl[0].url,
+          avatarImage: comment.avatarImage,
+          username: comment.userName,
+          userId: comment.userId,
+        };
+      }
+
+      return null;
     },
     isFirstQuoteComment() {
       return this.$attrs.isFirstQuoteComment;
