@@ -20,7 +20,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { aritcleListData } from '../assets/testData';
+// import { aritcleListData } from '../assets/testData';
 import ArticleListItem from './ArticleListItem.vue';
 import RemoteData from '../mixins/RemoteData';
 import { HOST } from '../types';

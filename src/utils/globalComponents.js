@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import {
-  Image, Lazyload, ImagePreview, Row, Col, Tab, Tabs, List, Cell, Icon, PullRefresh, Popup, Loading,
+  Image, Lazyload, ImagePreview, Row, Col, Tab, Tabs, List, Cell, Icon, PullRefresh, // Popup,
+  Loading,
   NavBar, Tabbar, TabbarItem, Button,
 } from 'vant';
 
@@ -24,7 +25,7 @@ Vue.use(List);
 Vue.use(Cell);
 Vue.use(Icon);
 Vue.use(PullRefresh);
-Vue.use(Popup);
+// Vue.use(Popup);
 Vue.use(Loading);
 Vue.use(NavBar);
 Vue.use(Tabbar).use(TabbarItem);
