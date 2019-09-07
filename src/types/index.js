@@ -7,6 +7,8 @@ const COMMENT_TYPE = {
   MAIN: 'MAIN',
 };
 
+const HOST = 'http://boomfun.ppnn13yu.xyz';
+
 const SYS_PLATFORM_TYPE = {
   PC: 'PC',
   MOBILE: 'MOBILE',
@@ -20,4 +22,5 @@ export {
   HTML_TAG_IN_COMMENT,
   COMMENT_TYPE,
   SYS_PLATFORM_TYPE,
+  HOST,
 };
