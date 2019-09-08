@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import {
   Image, Lazyload, ImagePreview, Row, Col, Tab, Tabs, List, Cell, Icon, PullRefresh, // Popup,
-  Loading,
+  Loading, Divider,
   NavBar, Tabbar, TabbarItem, Button,
 } from 'vant';
 
@@ -30,6 +30,7 @@ Vue.use(Loading);
 Vue.use(NavBar);
 Vue.use(Tabbar).use(TabbarItem);
 Vue.use(Button);
+Vue.use(Divider);
 /* end of vant ui */
 
 /* begin of cunstom component */

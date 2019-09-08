@@ -10,8 +10,9 @@
         :error-text="loadMoringErrorText"
         @load="loadMore"
         class="art-list"
+
       >
-        <ArticleListItem v-for="item in articleList" :data="item" :key="item.id" />
+        <ArticleListItem v-for="(item,idx) in articleList" :data="item" :key="item.id" :divider='idx !== articleList.lengtht'/>
       </van-list>
     </van-pull-refresh>
     <LoadingView v-else :error="hasRemoteErrors" :loading="remoteDataBusy" @reload="reloadOnError" />
@@ -28,13 +29,14 @@ import { HOST } from '../types';
 const LOAD_MORE = 'LOAD_MORE';
 const REFRESH = 'REFRESH';
 
-const baseUrl = `${HOST}/articles`;
+// const baseUrl = `${HOST}/articles`;
+const baseUrl = '/articles';
 
 export default {
   components: {
     ArticleListItem,
   },
-  mixins: [RemoteData({ url: 'afdf', name: 'articleList' })],
+  mixins: [RemoteData({ name: 'articleList' })],
   data() {
     return {
       loadMoring: false,
@@ -97,7 +99,6 @@ export default {
 
       if (this.type === LOAD_MORE) {
         let tmp = this.getCurArticles || [];
-        ret.push(res.data);
         ret = ret.concat(tmp, [res.data]);
       } else if (this.type === REFRESH) {
         ret = [res.data];
@@ -126,6 +127,7 @@ export default {
     doOnError() {
       // console.log(this.remoteErrors, this.hasRemoteErrors);
     },
+
     ...mapActions(['updateCurArticles', 'updateActiveId']),
   },
   computed: {

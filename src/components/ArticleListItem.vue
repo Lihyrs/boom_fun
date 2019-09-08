@@ -1,38 +1,41 @@
 <template>
-  <router-link
-    class="art-item"
-    :to="{name: 'article', params: { id: data.id,channelId:data.channel_id }}"
-  >
-    <van-cell :title="data.title" :clickable="true">
-      <template slot="icon">
-        <div class="act-left">
-          <span class="comm-cnt">{{data.comment_count}}</span>
-          <span class="comm-tt">评论</span>
-        </div>
-      </template>
+  <div>
+    <router-link
+      class="art-item"
+      :to="{name: 'article', params: { id: data.id,channelId:data.channel_id }}"
+    >
+      <van-row gutter="10">
+        <van-col span="2" class="act-left">
+          <div>
+            <span class="comm-cnt">{{commentCount}}</span>
+            <span class="comm-tt">评论</span>
+          </div>
+        </van-col>
+        <van-col span="20" class="act-right">
+          <van-row>
+            <van-col span="24" class="act-header">{{data.title}}</van-col>
+            <van-col span="24" class="act-content" v-html="data.description"></van-col>
+            <van-col span="24" class="act-info footer">
+              <van-row>
+                <van-col>
+                  <span class="act-up">{{`UP: ${data.username}`}}</span>
+                </van-col>
+                <van-col>
+                  <span class="act-time">{{postDate}}</span>
+                </van-col>
 
-      <van-row slot="label">
-        <van-col span="24">
-          <van-row class="act-content">
-            <van-col>{{data.description}}</van-col>
-          </van-row>
-          <van-row class="act-info footer">
-            <van-col>
-              <span class="act-up">{{`UP: ${data.username}`}}</span>
-            </van-col>
-            <van-col>
-              <span class="act-time">{{postDate}}</span>
-            </van-col>
-
-            <van-col class="act-view">
-              <van-icon class="icon-view" size="14" name="eye-o" />
-              <span class="view">{{data.view_count}}</span>
+                <van-col class="act-view">
+                  <van-icon class="icon-view" size="14" name="eye-o" />
+                  <span class="view">{{viewCount}}</span>
+                </van-col>
+              </van-row>
             </van-col>
           </van-row>
         </van-col>
       </van-row>
-    </van-cell>
-  </router-link>
+    </router-link>
+    <van-divider v-if="divider"></van-divider>
+  </div>
 </template>
 
 <script>
@@ -44,10 +47,42 @@ export default {
       type: Object,
       required: true,
     },
+    divider: {
+      type: Boolean,
+    },
   },
   computed: {
     postDate() {
       return moment(this.contribute_time).format('YYYY-MM-DD hh:mm:ss');
+    },
+    commentCount() {
+      let count = this.data.comment_count;
+      if (count === 0) {
+        return count;
+      }
+      let ret = count / (10 * 1000);
+      if (parseInt(ret, 10) > 0) {
+        if (count % (10 * 1000) > 1000) {
+          return `${ret.toFixed(1)}W`;
+        }
+        return `${parseInt(ret, 10)}W`;
+      }
+      return count;
+    },
+    viewCount() {
+      let count = this.data.view_count;
+
+      if (count === 0) {
+        return count;
+      }
+      let ret = count / (10 * 1000);
+      if (parseInt(ret, 10) > 0) {
+        if (count % (10 * 1000) > 1000) {
+          return `${ret.toFixed(1)}万`;
+        }
+        return `${parseInt(ret, 10)}万`;
+      }
+      return count;
     },
   },
 };
@@ -80,28 +115,57 @@ export default {
     }
   }
 
-  .act-content {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    //margin-top: 10px;
+  .act-right {
+    .act-header {
+      font-weight: bold;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 18px;
+      color: #333;
+      letter-spacing: 0;
+      line-height: 20px;
+      height: 20px;
+    }
+    .act-content {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #999;
+      line-height: 1.2;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      text-overflow: ellipsis;
+    }
+
+    .act-info {
+      font-size: 12px;
+      color: #999;
+      letter-spacing: 0;
+      margin-top: 10px;
+      line-height: 14px;
+
+      .act-up {
+        max-width: 110px;
+        display: inline-block;
+      }
+    }
   }
 
   .act-left {
-    margin-right: 10px;
     text-align: right;
-    padding-top: 5px;
+    width: 70px;
   }
+
   .act-view {
-    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // position: relative;
     .view {
-      margin-left: 15px;
-    }
-    .icon-view {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
+      // margin-left: 15px;
+      padding-left: 4px;
     }
   }
 }
