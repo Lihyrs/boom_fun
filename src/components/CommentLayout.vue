@@ -16,7 +16,7 @@
           <van-row>
             <!-- begin of comment header -->
             <van-col span="24">
-              <CommentHeader :comment="commentParsed" :visibily="!isQuote" />
+              <CommentHeader :comment="commentParsed" :visibily="$client.isPC()" />
             </van-col>
             <!-- end of comment header -->
             <!-- begin of comment content -->
@@ -27,7 +27,7 @@
                 :userInfo="{username:commentParsed.userName}"
                 :isQuote="isQuote"
               >
-                <template v-if="isQuote">
+                <template v-if="$client.isMobile()">
                   <CommentHeader :comment="commentParsed" class="qtd-comm-header">
                     <span>:</span>
                   </CommentHeader>
@@ -93,6 +93,32 @@ export default {
       return ret.join(' ');
     },
     commentParsed() {
+      // if (this.comment.userId == '955218') {
+      //   let tmp = this.comment.content;
+      //   const specialChars = {
+      //     '&quot': { value: '"', regExp: /&quot;/ },
+      //     '&amp': { value: '&', regExp: /&amp;/ },
+      //     '&lt': { value: '<', regExp: /&lt;/ },
+      //     '&gt': { value: '>', regExp: /&gt;/ },
+      //   };
+
+      //   const sCharRegExp = /(&[(quot)|(amp)|(lt)|(gt)]+;)/;
+      //   if (sCharRegExp.test(tmp)) {
+      //     for (let c in specialChars) {
+      //       // eslint-disable-next-line no-prototype-builtins
+      //       if (specialChars.hasOwnProperty(c)) {
+      //         tmp = tmp.replace(new RegExp(specialChars[c].regExp, 'g'), specialChars[c].value);
+      //         console.log('test---->', c, tmp);
+      //       }
+      //     }
+      //   }
+      //   // console.log('ffafef', /(&[(quot)|(amp)|(lt)|(gt)]+;)/.test(tmp));
+      //   tmp = parseCommentContent(
+      //     this.comment.content,
+      //     this.isQuote && this.$client.isMobile(),
+      //   );
+      //   // console.log('content==', a);
+      // }
       return {
         ...this.comment,
         content: parseCommentContent(
@@ -166,11 +192,12 @@ export default {
   }
 
   /deep/ .comm-content,
-  /deep/ .comm-footer {
+  /deep/ .comm-footer,
+  /deep/ .comment-header {
     margin-left: 7px;
   }
 
-  /deep/ .comm-content {
+  /deep/ .comment-header {
     margin-top: 16px;
   }
 }

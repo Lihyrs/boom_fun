@@ -3,7 +3,6 @@ import {
   EMOT_IN_COMMENT,
   TEXT_IN_COMMENT,
   IMG_IN_COMMENT,
-  HTML_TAG_IN_COMMENT,
 } from '../types';
 
 
@@ -28,14 +27,10 @@ export default {
       let ret = '';
       const { payload, type } = obj;
       if (type === TEXT_IN_COMMENT) {
-        ret = <span>{payload}</span>;
+        ret = <CommentText content={payload} />;
       } else if (type === EMOT_IN_COMMENT
                         || type === IMG_IN_COMMENT) {
         ret = <CommentImage data={payload} type={type} />;
-      } else if (type === HTML_TAG_IN_COMMENT) {
-        if (payload.tag === 'newline') {
-          ret = <br />;
-        }
       }
 
       return ret;
