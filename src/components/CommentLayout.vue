@@ -89,6 +89,7 @@ export default {
       } else {
         ret.push('main-comment-item');
       }
+
       return ret.join(' ');
     },
     commentParsed() {
@@ -134,6 +135,11 @@ export default {
     margin-bottom: 20px;
     margin-left: 0;
     margin-left: 60px;
+   .qtd-comment-item-border;
+    @media screen and (max-width:1024px){
+
+      padding-right: 3px
+    }
   }
   .mci-avatar {
     margin-top: -5px;
@@ -148,6 +154,13 @@ export default {
 
 .qtd-comment-item {
   .qtd-comment-item;
+  @media screen and (max-width:1024px){
+      border-top: 0;
+      border-left:0;
+      border-right:0;
+      padding-left: 0;
+      padding-right: 0
+    }
   /deep/ .uname {
     color: #2596d2;
   }
@@ -161,4 +174,6 @@ export default {
     margin-top: 16px;
   }
 }
+
+
 </style>

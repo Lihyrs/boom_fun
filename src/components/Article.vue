@@ -87,9 +87,9 @@ export default {
     },
 
     generateUrl(pageNo) {
-      const baseUrl = `${HOST}/comment`;
+      // const baseUrl = `${HOST}/comment`;
       // for dev
-      // const baseUrl = '/comment';
+      const baseUrl = '/comment';
       const url = `${baseUrl}?sourceId=${
         this.id
       }&sourceType=3&page=${pageNo}&pivotCommentId=0&newPivotCommentId=0&_ts=${moment().format(
@@ -172,7 +172,12 @@ export default {
   computed: {
     commentTopCount() {
       if (this.comments.length) {
-        return this.comments[0].totalCount;
+        const totalCount = this.comments[0].totalCount;
+
+        if (totalCount > 999 && this.$client.isMobile()) {
+          return '999+';
+        }
+        return totalCount;
       }
 
       return 0;

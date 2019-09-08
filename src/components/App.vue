@@ -1,14 +1,11 @@
 <template>
   <div >
     <transition name="fade">
-      <router-view @showToTopBtn='showToTopBtn' @hideToTopBtn='hideToTopBtn' />
+      <router-view @showToTopBtn='showToTopBtn' @hideToTopBtn='hideToTopBtn' @scroll2top='scroll2top' />
     </transition>
     <div v-if="visibily" id="to-top" @click="scroll2top">
       <van-icon name="arrow-up" />
     </div>
-    <van-tabbar v-if="$client.isMobile()">
-      <van-tabbar-item @click.native='scroll2top'>文章</van-tabbar-item>
-    </van-tabbar>
   </div>
 </template>
 

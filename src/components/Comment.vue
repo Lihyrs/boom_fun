@@ -43,13 +43,13 @@ export default {
     },
     getClass() {
       let ret = [];
-      const { PC, MOBILE } = SYS_PLATFORM_TYPE;
-      const type = this.$store.getters.getPlatformType;
-      if (type === PC) {
-        // nothing to do
-      } else if (type === MOBILE) {
-        ret.push('mobile');
-      }
+      // const { PC, MOBILE } = SYS_PLATFORM_TYPE;
+      // const type = this.$store.getters.getPlatformType;
+      // if (type === PC) {
+      //   // nothing to do
+      // } else if (type === MOBILE) {
+      //   ret.push('mobile');
+      // }
 
       return ret.join(' ');
     },

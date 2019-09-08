@@ -1,3 +1,5 @@
+@import './mixins';
+
 .comment-item {
 
   .uname,
@@ -16,11 +18,6 @@
     }
   }
 
-  .qtd-comm-header{
-    display: inline;
-    margin-right: 5px
-  }
-
   .comm-content {
     font-size: 13PX;
     color: #333;
@@ -30,8 +27,6 @@
     word-wrap: break-word;
     vertical-align: baseline;
     line-height: 1.38;
-
-    
   }
 }
 
@@ -44,6 +39,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    display: inline-block;
   }
   
+}
+
+.qtd-comment-item{
+  .qtd-comment-item;
+  .qtd-comment-item-border;
+}
+
+.qtd-comm-header{
+  display: inline;
+  margin-right: 5px
 }

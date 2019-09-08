@@ -4,15 +4,16 @@ const CHANNELS = [
     name: '生活情感',
     reamIds: [25, 34, 7, 6, 17, 1, 2],
   },
-  {
-    id: 164,
-    name: '游戏',
-    reamIds: [8, 11],
-  },
+
   {
     id: 110,
     name: '综合',
     reamIds: [5, 22, 3, 4],
+  },
+  {
+    id: 164,
+    name: '游戏',
+    reamIds: [8, 11],
   },
   {
     id: 74,

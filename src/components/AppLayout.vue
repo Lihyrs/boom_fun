@@ -1,4 +1,5 @@
 <template>
+<div>
   <van-tabs v-model="activeId" swipeable sticky @change="handleChange">
     <van-tab v-for="item in tags" :title="item.name" :name="item.id" :key="item.id">
       <div class="art-list-container">
@@ -6,6 +7,10 @@
       </div>
     </van-tab>
   </van-tabs>
+   <van-tabbar v-if="$client.isMobile()">
+      <van-tabbar-item @click.native='$emit("scroll2top")'>文章</van-tabbar-item>
+    </van-tabbar>
+    </div>
 </template>
 
 <script>
