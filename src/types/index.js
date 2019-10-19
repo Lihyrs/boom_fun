@@ -1,0 +1,24 @@
+const EMOT_IN_COMMENT = 'EMOT_IN_COMMENT';
+const TEXT_IN_COMMENT = 'TEXT_IN_COMMENT';
+const IMG_IN_COMMENT = 'IMG_IN_COMMENT';
+const COMMENT_TYPE = {
+  QUOTE: 'QUOTE',
+  MAIN: 'MAIN',
+};
+
+const HOST = 'http://boomfun.ppnn13yu.xyz';
+
+const SYS_PLATFORM_TYPE = {
+  PC: 'PC',
+  MOBILE: 'MOBILE',
+  GAME: 'GAME',
+};
+
+export {
+  EMOT_IN_COMMENT,
+  TEXT_IN_COMMENT,
+  IMG_IN_COMMENT,
+  COMMENT_TYPE,
+  SYS_PLATFORM_TYPE,
+  HOST,
+};
