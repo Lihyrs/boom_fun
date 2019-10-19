@@ -1,0 +1,55 @@
+@import './mixins';
+
+.comment-item {
+
+  .uname,
+  .floor,
+  .comm-footer {
+    font-size: 12PX;
+    color: #999
+  }
+
+  .uname {
+    cursor: pointer;
+    margin-right: 5px;
+    margin-left: 5px;
+    &:first-of-type{
+      margin-left: 0;
+    }
+  }
+
+  .comm-content {
+    font-size: 13PX;
+    color: #333;
+    padding: 10px 5px 15px 0;
+    word-break: break-word;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    vertical-align: baseline;
+    line-height: 1.38;
+  }
+}
+
+.act-info{
+  .act-up,.act-view,.act-time{
+    margin-right: 20px
+  }
+  .act-up{
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+  }
+  
+}
+
+.qtd-comment-item{
+  .qtd-comment-item;
+  .qtd-comment-item-border;
+}
+
+.qtd-comm-header{
+  display: inline;
+  margin-right: 5px
+}
